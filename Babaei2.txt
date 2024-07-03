@@ -1,0 +1,989 @@
+{
+  "log": {
+    "level": "warn",
+    "output": "box.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "address": "udp://1.1.1.1",
+        "address_resolver": "dns-direct"
+      },
+      {
+        "tag": "dns-trick-direct",
+        "address": "https://sky.rethinkdns.com/",
+        "detour": "direct-fragment"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "1.1.1.1",
+        "address_resolver": "dns-local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-local",
+        "address": "local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "fnp.giga-downloader.com",
+          "ryn.giga-downloader.com",
+          "atc.giga-downloader.com",
+          "psm.giga-downloader.com",
+          "apt.giga-downloader.com",
+          "rtlc.giga-downloader.com",
+          "mcic.giga-downloader.com",
+          "rtl.giga-downloader.com",
+          "rsp.giga-downloader.com",
+          "afn.giga-downloader.com",
+          "smt.giga-downloader.com",
+          "mtn.giga-downloader.com",
+          "mkh.giga-downloader.com",
+          "sbn.giga-downloader.com",
+          "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+          "dbn.giga-downloader.com",
+          "ask.giga-downloader.com",
+          "arx.giga-downloader.com",
+          "hwb.giga-downloader.com",
+          "mbt.giga-downloader.com",
+          "ptk.giga-downloader.com",
+          "mci.giga-downloader.com",
+          "shm.giga-downloader.com",
+          "ast.giga-downloader.com",
+          "sht.giga-downloader.com",
+          "prs.giga-downloader.com",
+          "fnv.giga-downloader.com",
+          "mtnc.giga-downloader.com",
+          "mkhc.giga-downloader.com"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "domain_suffix": ".ir",
+        "geosite": "ir",
+        "server": "dns-direct"
+      },
+      {
+        "domain": "cp.cloudflare.com",
+        "server": "dns-remote",
+        "rewrite_ttl": 3000
+      }
+    ],
+    "final": "dns-remote",
+    "static_ips": {
+      "sky.rethinkdns.com": [
+        "188.114.99.0",
+        "188.114.98.0",
+        "2a06:98c1:3123::",
+        "2a06:98c1:3122::",
+        "104.17.147.22",
+        "104.17.148.22",
+        "188.114.97.3",
+        "188.114.96.3",
+        "2a06:98c1:3120::6",
+        "2a06:98c1:3121::6"
+      ]
+    },
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/28",
+      "auto_route": true,
+      "strict_route": true,
+      "endpoint_independent_nat": true,
+      "stack": "mixed",
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2334,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "127.0.0.1",
+      "listen_port": 6450
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "auto",
+        "02-bit-clean-mcic § 0",
+        "00-bit-clean § 1",
+        "01-bit-clean-mci § 2",
+        "03-bit-clean-mtn § 3",
+        "04-bit-clean-mtnc § 4",
+        "05-bit-clean-rtl § 5",
+        "06-bit-clean-rtlc § 6",
+        "07-bit-clean-mkh § 7",
+        "08-bit-clean-mkhc § 8",
+        "09-bit-clean-hwb § 9",
+        "10-bit-clean-ast § 10",
+        "11-bit-clean-sht § 11",
+        "12-bit-clean-prs § 12",
+        "13-bit-clean-mbt § 13",
+        "14-bit-clean-ask § 14",
+        "15-bit-clean-rsp § 15",
+        "16-bit-clean-afn § 16",
+        "17-bit-clean-psm § 17",
+        "18-bit-clean-arx § 18",
+        "19-bit-clean-smt § 19",
+        "20-bit-clean-shm § 20",
+        "21-bit-clean-fnv § 21",
+        "22-bit-clean-dbn § 22",
+        "23-bit-clean-apt § 23",
+        "24-bit-clean-fnp § 24",
+        "25-bit-clean-ryn § 25",
+        "26-bit-clean-sbn § 26",
+        "27-bit-clean-ptk § 27",
+        "28-bit-clean-atc § 28",
+        "29-bit-clean-warp § 29"
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "02-bit-clean-mcic § 0",
+        "00-bit-clean § 1",
+        "01-bit-clean-mci § 2",
+        "03-bit-clean-mtn § 3",
+        "04-bit-clean-mtnc § 4",
+        "05-bit-clean-rtl § 5",
+        "06-bit-clean-rtlc § 6",
+        "07-bit-clean-mkh § 7",
+        "08-bit-clean-mkhc § 8",
+        "09-bit-clean-hwb § 9",
+        "10-bit-clean-ast § 10",
+        "11-bit-clean-sht § 11",
+        "12-bit-clean-prs § 12",
+        "13-bit-clean-mbt § 13",
+        "14-bit-clean-ask § 14",
+        "15-bit-clean-rsp § 15",
+        "16-bit-clean-afn § 16",
+        "17-bit-clean-psm § 17",
+        "18-bit-clean-arx § 18",
+        "19-bit-clean-smt § 19",
+        "20-bit-clean-shm § 20",
+        "21-bit-clean-fnv § 21",
+        "22-bit-clean-dbn § 22",
+        "23-bit-clean-apt § 23",
+        "24-bit-clean-fnp § 24",
+        "25-bit-clean-ryn § 25",
+        "26-bit-clean-sbn § 26",
+        "27-bit-clean-ptk § 27",
+        "28-bit-clean-atc § 28",
+        "29-bit-clean-warp § 29"
+      ],
+      "url": "http://cp.cloudflare.com/",
+      "interval": "10m0s",
+      "idle_timeout": "1h40m0s"
+    },
+    {
+      "type": "vless",
+      "tag": "02-bit-clean-mcic § 0",
+      "server": "mcic.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "00-bit-clean § 1",
+      "server": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "01-bit-clean-mci § 2",
+      "server": "mci.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "03-bit-clean-mtn § 3",
+      "server": "mtn.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "04-bit-clean-mtnc § 4",
+      "server": "mtnc.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "05-bit-clean-rtl § 5",
+      "server": "rtl.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "06-bit-clean-rtlc § 6",
+      "server": "rtlc.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "07-bit-clean-mkh § 7",
+      "server": "mkh.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "08-bit-clean-mkhc § 8",
+      "server": "mkhc.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "09-bit-clean-hwb § 9",
+      "server": "hwb.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "10-bit-clean-ast § 10",
+      "server": "ast.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "11-bit-clean-sht § 11",
+      "server": "sht.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "12-bit-clean-prs § 12",
+      "server": "prs.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "13-bit-clean-mbt § 13",
+      "server": "mbt.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "14-bit-clean-ask § 14",
+      "server": "ask.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "15-bit-clean-rsp § 15",
+      "server": "rsp.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "16-bit-clean-afn § 16",
+      "server": "afn.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "17-bit-clean-psm § 17",
+      "server": "psm.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "18-bit-clean-arx § 18",
+      "server": "arx.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "19-bit-clean-smt § 19",
+      "server": "smt.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "20-bit-clean-shm § 20",
+      "server": "shm.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "21-bit-clean-fnv § 21",
+      "server": "fnv.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "22-bit-clean-dbn § 22",
+      "server": "dbn.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "23-bit-clean-apt § 23",
+      "server": "apt.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "24-bit-clean-fnp § 24",
+      "server": "fnp.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "25-bit-clean-ryn § 25",
+      "server": "ryn.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "26-bit-clean-sbn § 26",
+      "server": "sbn.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "27-bit-clean-ptk § 27",
+      "server": "ptk.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "28-bit-clean-atc § 28",
+      "server": "atc.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8082",
+        "headers": {
+          "Host": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com"
+        },
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "vless",
+      "tag": "29-bit-clean-warp § 29",
+      "server": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+      "server_port": 443,
+      "uuid": "bc827d67-f095-4c65-9327-33039decb888",
+      "tls": {
+        "enabled": true,
+        "server_name": "123456789_123456789_123456789_123456789_123456789_123456789_000.giga-downloader.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "random"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws5/8081",
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      },
+      "packet_encoding": ""
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-fragment",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "1-500",
+        "sleep": "0-500"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "bypass"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "geo-assets/sagernet-sing-geoip-geoip.db"
+    },
+    "geosite": {
+      "path": "geo-assets/sagernet-sing-geosite-geosite.db"
+    },
+    "rules": [
+      {
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
+        "port": 53,
+        "outbound": "dns-out"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      },
+      {
+        "domain_suffix": ".ir",
+        "geosite": "ir",
+        "geoip": "ir",
+        "outbound": "bypass"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "clash.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:6756",
+      "secret": "7IG3wKIbxX-BR-8z"
+    }
+  }
+}
